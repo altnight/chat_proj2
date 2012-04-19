@@ -1,0 +1,9 @@
+h1= title
+p Welcome to #{title}
+  form(action = "/login", method = "POST")
+    label UserName:
+      input(type = "text", name = "name")
+    label Password:
+      input(type = "text", name = 'password')
+    label 送信:
+      input(type = "submit", value = "送信")
