@@ -1,4 +1,4 @@
-chat_proj
+chat_proj2
 ==============
 
 Node+Mongoでチャット的ななにかを作りたい
