@@ -8,8 +8,6 @@ var express = require('express'),
     http = require('http'),
     MongoStore = require('connect-mongo')(express);
 
-
-
 var app = express();
 
 app.configure(function(){
@@ -21,6 +19,7 @@ app.configure(function(){
   app.use(express.bodyParser());
   app.use(express.methodOverride());
   app.use(express.cookieParser('your secret here'));
+  //適当すぎるけどいいのかな？
   app.use(express.session({
     secret: "secret",
     store: new MongoStore({ db: 'chat' })
@@ -35,6 +34,11 @@ app.configure('development', function(){
 app.get('/', routes.index);
 app.get('/signup', routes.signup);
 app.post('/signup', routes.create_signup);
+app.get('/login', routes.login);
+app.post('/login', routes.create_login);
+app.get('/logout', routes.logout);
+app.get('/roby', routes.roby);
+app.post('/roby', routes.create_roby);
 
 http.createServer(app).listen(3000);
 

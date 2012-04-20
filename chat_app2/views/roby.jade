@@ -1,11 +1,14 @@
-h1= title
-p Welcome to #{title}
-for obj in room
-  ul
-    li
-      a(href = "/room/#{obj}") Room::#{obj}
-p
-  form(action = "/roby", method = "POST")
-    label 入室する:
-      input(type = "text", name = "room")
-      input(type = "submit", name = "入室する")
+extends layout
+
+block content
+  h1= title
+  p Welcome to #{title}
+  for obj in room
+    ul
+      li
+        a(href = "/room/#{obj.name}") Room::#{obj.name}
+  p
+    form(action = "/roby", method = "POST")
+      label 入室する:
+        input(type = "text", name = "room")
+        input(type = "submit", name = "入室する")

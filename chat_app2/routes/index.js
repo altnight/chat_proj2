@@ -13,19 +13,23 @@ var User = new Schema({
   name : String,
   password : String
 });
-var userModel = mongoose.model('User', User);
+mongoose.model('User', User);
+var UserModel = mongoose.model('User');
 
 var Room = new Schema({
   name : String
 });
-var RoomModel = mongoose.model('Room', Room);
+mongoose.model('Room', Room);
+var RoomModel = mongoose.model('Room');
 
 var Chat = new Schema({
   date : Date,
   name : String,
-  chat : String
+  chat : String,
+  room : [Room]
 });
-var ChatModel = mongoose.model('Chat', Chat);
+mongoose.model('Chat', Chat);
+var ChatModel = mongoose.model('Chat');
 //Schema
 
 exports.index = function(req, res){
@@ -63,51 +67,45 @@ exports.create_signup= function(req, res){
     //res.redirect('/signup');
   //}
 
-  var user = userModel();
-  user.name = req.body.name;
-  user.password = req.body.password;
-  user.save();
-  //redis.get("name:" + req.body.name + ":uid", function(err, uid){
-    //if (uid){
-      //console.log("既に同じ名前があります");
-      //res.redirect('/signup');
-    //}
-    //else {
-      ////新規登録
-      //redis.incr("uid", function(err, uid){
-        //redis.set("name:" + req.body.name +":uid", uid);
-        //redis.set("uid:" + uid + ":name", req.body.name);
-        //redis.set("uid:" + uid + ":password", req.body.password);
-      //});
-    //req.session.name = req.body.name;
-    //res.redirect('/');
-    //}
+  UserModel.findOne({name:req.body.name}, function(err, obj){
+    if (obj){
+      console.log('同じ名前の人がいます');
+      res.redirect('/signup');
+    }
+    else {
+      console.log('新規登録します');
+      var user = new UserModel();
+      user.name = req.body.name;
+      user.password = req.body.password;
+      user.save();
+      req.session.name = user.name;
+      res.redirect('/');
+    }
+  });
+  //一覧
+  //UserModel.find({}, function(err, docs){
+    //docs.forEach(function(doc){
+      //console.log(doc);
+    //});
   //});
 };
 
-exports.login= function(req, res){
+exports.login = function(req, res){
   res.render('login', { title: 'login' });
 };
 
-exports.create_login= function(req, res){
-  //redis.get("name:" + req.body.name + ":uid", function(err, uid){
-    //if (! uid){
-      //console.log('そんな名前ないです');
-      //res.redirect('/login');
-    //}
-    //else redis.get("uid:" + uid + ":password", function(err2, real_password){
-      //if (req.body.password != real_password){
-        //console.log('パスワードが違うっぽい');
-        //res.redirect('/login');
-      //}
-      //else{
-        //console.log('ログインします');
-        //req.session.name = req.body.name;
-        //res.redirect('/');
-      //}
-    //});
-  //});
-
+exports.create_login = function(req, res){
+  UserModel.findOne({name:req.body.name, password:req.body.password}, function(err, obj){
+    if (obj){
+      console.log('ログインします');
+      req.session.name = req.body.name;
+      res.redirect('/');
+    }
+    else {
+      console.log('ログイン失敗');
+      res.redirect('/login');
+    }
+  });
 };
 
 exports.logout= function(req, res){
@@ -117,28 +115,27 @@ exports.logout= function(req, res){
 };
 
 exports.roby= function(req, res){
-  //redis.lrange("room", 0, -1, function(err, room){
-  //res.render('roby', { title: 'roby',
-                       //room: room });
-  //});
+  RoomModel.find({}, function(err, room){
+      res.render('roby', {title: 'roby',
+                          room: room});
+  });
 };
 
 exports.create_roby= function(req, res){
-  //if (req.body.room === "") return false;
-  //redis.rpush("room", req.body.room);
-  //redis.rpop("room", function(err, latest_room){
-    //redis.rpush("room", latest_room);
-    //req.session.room = latest_room;
-    //res.redirect('/room/' + latest_room);
-  //});
+  if (req.body.room === "") return false;
+  console.log('新規room登録します');
+  var room = new RoomModel();
+  room.name = req.body.room;
+  room.save();
+  res.redirect('/roby');
 };
 
-//exports.room= function(req, res){
+exports.room= function(req, res){
   //redis.lrange("room:" + req.params.id, 0, -1,function(err, chat){
     //res.render('room', { title: "chat_room",
                          //chat: chat });
   //});
-//};
+};
 
 exports.create_room= function(req, res){
   //(req.session.name === undefined) ? name = '増田' : name = req.session.name;
