@@ -3,9 +3,12 @@
  * Module dependencies.
  */
 
-var express = require('express')
-  , routes = require('./routes')
-  , http = require('http');
+var express = require('express'),
+    routes = require('./routes'),
+    http = require('http'),
+    MongoStore = require('connect-mongo')(express);
+
+
 
 var app = express();
 
@@ -18,7 +21,10 @@ app.configure(function(){
   app.use(express.bodyParser());
   app.use(express.methodOverride());
   app.use(express.cookieParser('your secret here'));
-  app.use(express.session());
+  app.use(express.session({
+    secret: "secret",
+    store: new MongoStore({ db: 'chat' })
+  }));
   app.use(app.router);
 });
 
@@ -27,6 +33,8 @@ app.configure('development', function(){
 });
 
 app.get('/', routes.index);
+app.get('/signup', routes.signup);
+app.post('/signup', routes.create_signup);
 
 http.createServer(app).listen(3000);
 

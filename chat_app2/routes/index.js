@@ -2,6 +2,31 @@
 /*
  * GET home page.
  */
+//Schema
+
+var mongoose = require('mongoose');
+    mongoose.connect('mongodb://localhost/chat');
+var Schema = mongoose.Schema;
+var ObjectId = Schema.ObjectId;
+
+var User = new Schema({
+  name : String,
+  password : String
+});
+var userModel = mongoose.model('User', User);
+
+var Room = new Schema({
+  name : String
+});
+var RoomModel = mongoose.model('Room', Room);
+
+var Chat = new Schema({
+  date : Date,
+  name : String,
+  chat : String
+});
+var ChatModel = mongoose.model('Chat', Chat);
+//Schema
 
 exports.index = function(req, res){
   if (req.session.name){
@@ -38,6 +63,10 @@ exports.create_signup= function(req, res){
     //res.redirect('/signup');
   //}
 
+  var user = userModel();
+  user.name = req.body.name;
+  user.password = req.body.password;
+  user.save();
   //redis.get("name:" + req.body.name + ":uid", function(err, uid){
     //if (uid){
       //console.log("既に同じ名前があります");
