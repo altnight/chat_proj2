@@ -7,25 +7,26 @@
 var mongoose = require('mongoose');
     mongoose.connect('mongodb://localhost/chat');
 var Schema = mongoose.Schema;
-var ObjectId = Schema.ObjectId;
+//var ObjectId = Schema.ObjectId;
 
 var User = new Schema({
-  name : String,
-  password : String
+  name : {type: String, required: true},
+  password: {type: String, required: true}
 });
 mongoose.model('User', User);
 var UserModel = mongoose.model('User');
 
 var Room = new Schema({
-  name : String
+  name : {type: String, required: true},
+  date : {type: Date, default: Date.now}
 });
 mongoose.model('Room', Room);
 var RoomModel = mongoose.model('Room');
 
 var Chat = new Schema({
-  date : Date,
-  name : String,
-  chat : String,
+  date : {type: Date, default: Date.now},
+  name : {type: String, required: true},
+  chat: {type: String, required: true},
   room : [Room]
 });
 mongoose.model('Chat', Chat);
