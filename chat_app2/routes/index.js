@@ -42,11 +42,11 @@ exports.index = function(req, res){
   }
 };
 
-exports.signup= function(req, res){
+exports.signup = function(req, res){
   res.render('signup', { title: 'signup' });
 };
 
-exports.create_signup= function(req, res){
+exports.create_signup = function(req, res){
   //if (! /[0-9a-zA-Z\-_]+/.test(req.body.name)){
     //res.send('name は 半角英数で');
     //res.redirect('/signup');
@@ -109,20 +109,20 @@ exports.create_login = function(req, res){
   });
 };
 
-exports.logout= function(req, res){
+exports.logout = function(req, res){
   delete req.session.name;
   delete req.session.room;
   res.redirect('/');
 };
 
-exports.roby= function(req, res){
+exports.roby = function(req, res){
   RoomModel.find({}, function(err, room){
       res.render('roby', {title: 'roby',
                           room: room});
   });
 };
 
-exports.create_roby= function(req, res){
+exports.create_roby = function(req, res){
   if (req.body.room === "") return false;
   console.log('新規room登録します');
   var room = new RoomModel();
@@ -131,14 +131,20 @@ exports.create_roby= function(req, res){
   res.redirect('/roby');
 };
 
-exports.room= function(req, res){
-  //redis.lrange("room:" + req.params.id, 0, -1,function(err, chat){
-    //res.render('room', { title: "chat_room",
-                         //chat: chat });
-  //});
+exports.room = function(req, res){
+  ChatModel.find({}, function(err, chat){
+      res.render('roby', {title: 'roby',
+                          chat: chat});
+  });
 };
 
-exports.create_room= function(req, res){
+exports.create_room = function(req, res){
+  var chat = new ChatModel();
+  chat.chat = req.body.chat;
+  req.session.name === undefined ? name = '増田' : name = req.session.name;
+  chat.name = name;
+  chat.save();
+  res.redirect('/room/' + req.session.room);
   //(req.session.name === undefined) ? name = '増田' : name = req.session.name;
   //if (req.body.chat === null) return false;
   //redis.rpush("room:" + req.session.room, name + ":" + req.body.chat);

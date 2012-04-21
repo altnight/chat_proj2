@@ -1,15 +1,15 @@
-script(src = '/socket.io/socket.io.js')
-script
-  //-var socket = io.connect('http://192.168.56.101');
-  var socket = io.connect('http://localhost');
-  socket.on('connect', function(data){
-    socket.emit('to_server', 'data');
-    socket.on('to_client', function(data){
-      p = document.createElement('p');
-      p.textContent = data;
-      document.getElementById('chat').appendChild(p);
-    });
-  })
+//-script(src = '/socket.io/socket.io.js')
+//-script
+  //-//-var socket = io.connect('http://192.168.56.101');
+  //-var socket = io.connect('http://localhost');
+  //-socket.on('connect', function(data){
+    //-socket.emit('to_server', 'data');
+    //-socket.on('to_client', function(data){
+      //-p = document.createElement('p');
+      //-p.textContent = data;
+      //-document.getElementById('chat').appendChild(p);
+    //-});
+  //-})
 extends layout
 
 block content
@@ -17,7 +17,7 @@ block content
   p Welcome to #{title}
 
   for obj in chat
-    p #{obj}
+    p #{obj.date}:#{obj.name}:#{obj.chat}
 
   #chat
 

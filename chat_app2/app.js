@@ -39,6 +39,8 @@ app.post('/login', routes.create_login);
 app.get('/logout', routes.logout);
 app.get('/roby', routes.roby);
 app.post('/roby', routes.create_roby);
+app.get('/room/:id?', routes.room);
+app.post('/room/:id?', routes.create_room);
 
 http.createServer(app).listen(3000);
 
