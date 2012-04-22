@@ -17,7 +17,7 @@ block content
   p Welcome to #{title}
 
   for obj in chat
-    p #{obj.date}:#{obj.name}:#{obj.chat}
+    p #{"2" + obj.date.getYear()}/#{(1+obj.date.getMonth())}/#{obj.date.getDate()}:#{obj.date.getHours()}:#{obj.date.getMinutes()}:#{("0" + obj.date.getSeconds()).slice(-2)}:#{obj.name}:#{obj.chat}
 
   #chat
 

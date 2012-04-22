@@ -27,7 +27,7 @@ var Chat = new Schema({
   date : {type: Date, default: Date.now},
   name : {type: String, required: true},
   chat: {type: String, required: true},
-  room : [Room]
+  room : {type: String, required: true}
 });
 mongoose.model('Chat', Chat);
 var ChatModel = mongoose.model('Chat');
@@ -128,12 +128,14 @@ exports.create_roby = function(req, res){
   var room = new RoomModel();
   room.name = req.body.room;
   room.save();
+  req.session.room = req.body.room;
   res.redirect('/roby');
 };
 
 exports.room = function(req, res){
-  ChatModel.find({}, function(err, chat){
-      res.render('roby', {title: 'roby',
+  req.session.room = req.params.id;
+  ChatModel.find({room: req.session.room}, function(err, chat){
+      res.render('room', {title: 'room:' + req.session.room,
                           chat: chat});
   });
 };
@@ -141,12 +143,9 @@ exports.room = function(req, res){
 exports.create_room = function(req, res){
   var chat = new ChatModel();
   chat.chat = req.body.chat;
-  req.session.name === undefined ? name = '増田' : name = req.session.name;
+  req.session.name === undefined ? name = 'anony' : name = req.session.name;
   chat.name = name;
+  chat.room = req.session.room;
   chat.save();
   res.redirect('/room/' + req.session.room);
-  //(req.session.name === undefined) ? name = '増田' : name = req.session.name;
-  //if (req.body.chat === null) return false;
-  //redis.rpush("room:" + req.session.room, name + ":" + req.body.chat);
-  //res.redirect('/room/' + req.session.room);
 };

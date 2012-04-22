@@ -7,7 +7,7 @@
     "url": ""
   },
   "dependencies": {
-    "express": "*",
+    "express": "3.0.0alpha1",
     "jade": "*",
     "connect-mongo" : "*",
     "mongoose" : "*"
